@@ -1,0 +1,499 @@
+@import url('https://fonts.googleapis.com/css2?family=Nerko+One&family=Itim&family=Sigmar&display=swap');
+
+@keyframes battle-transition {
+    0% { top: -100% }
+    30% { top: 0px }
+    70% { top: 0px }
+    100% { top: 100% }
+}
+
+@keyframes battle-title {
+    0% { top: 150%; }
+    30% { top: 50%; font-size: 100px; }
+    50% { font-size: 120px; }
+    70% { top: 50%; font-size: 100px;}
+    100% { top: -50%; }
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.transition {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 100;
+}
+
+body {
+    background-image: url(./assets/grass-background.png);
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    font-family: 'Itim', cursive;
+}
+
+h1 {
+    font-size: 100px;
+    color: aliceblue;
+}
+
+h2 {
+    font-size: 48px;
+    color: #f0f8ffc9;
+    font-family: 'Nerko One', cursive;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 28px;
+    color: aliceblue;
+    font-family: 'Nerko One', cursive;
+    font-weight: normal;
+}
+
+h4 {
+    font-size: 20px;
+    font-family: 'Itim';
+    font-weight: normal;
+}
+
+#background-color {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(0 0 0 / 0%);
+}
+
+.hidden {
+    display: none;
+}
+
+#title-section {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 48px;
+}
+
+.title {
+    display: flex;
+    width: auto;
+    height: 80px;
+    margin: 10px;
+    color: #f0f8ffc9;
+    align-items: center;
+    font-family: 'Sigmar', sans-serif;
+}
+
+button {
+    color: aliceblue;
+    background-color: #08829533;
+    border: 2px solid aliceblue;
+    font-family: 'Itim';
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0a4d6881;
+}
+
+button:active {
+    background-color: #0a4d68c1;
+}
+
+#pet-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    background-color: #1a397a4a;
+    box-sizing: content-box;
+    padding: 25px 0px 25px 0px;
+}
+
+.pet-cards {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+
+#loading-section {
+    background-color: black;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+#battle-transition {
+    background-color: black;
+    top: -100%;
+    width: 100%;
+    height: 100%;
+    transition: top 1s;
+    overflow: hidden;
+}
+
+#battle-title {
+    position: relative;
+    text-align: center;
+    top: 150%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#attack-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pet-cards, #attack-buttons {
+    margin-top: 15px;
+    gap: 20px;
+}
+
+.pet-card {
+    display: flex;
+    height: 200px;
+    width: 340px;
+    background-color: #08829533;
+    color: aliceblue;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid aliceblue;
+    font-size: 20px;
+    cursor: pointer;
+    align-items: flex-start;
+}
+
+.pet-card:hover {
+    background-color: #0a4d6878;
+}
+
+.pet-card:active {
+    background-color: #0a4d68c1;
+}
+
+input:checked + .pet-card {
+    background: linear-gradient(#088395, #0A4D68);
+}
+
+.pet-card-description {
+    flex-grow: 1;
+}
+
+.pet-card-description p {
+    margin-top: 6px;
+}
+
+.pet-card img {
+    height: 100%;
+}
+
+.pet-option img {
+    width: 120px;
+    height: fit-content;
+}
+
+#pet-select-button {
+    display: flex;
+    height: 60px;
+    width: 660px;
+    margin: 20px;
+    font-size: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+.subtitle {
+    display: flex;
+    color: #f0f8ffcf;
+    text-align: center;
+    margin: 0px 10px;
+}
+
+#attack-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.attack-button {
+    width: 132px;
+    height: 68px;
+    font-size: 20px;
+}
+
+.attack-button:disabled {
+    background-color: #0a39406e;
+    border-color: #959ea7;
+    color: #959ea7;
+    cursor: default;
+}
+
+#battle-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    /* background-color: #1a397a4a; */
+    padding: 25px 0px 25px 0px;
+}
+
+#battle {
+    display: flex;
+    width: 760px;
+    margin: 16px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pet {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 32px;
+    line-height: 20px;
+    color: aliceblue;
+    text-shadow: 2px 2px 4px #000000a6;
+    gap: 10px;
+}
+
+.pet-description {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.pet img {
+    width: 200px;
+}
+
+#battle-data {
+    display: flex;
+    margin-bottom: 16px;
+    justify-content: center;
+    width: 90%;
+}
+
+#battle-history-section {
+    display: grid;
+    grid-template-columns: 35% 30% 35%;
+    width: 536px;
+    justify-items: center;
+    text-align: center;
+    color: aliceblue;
+}
+
+.player-battle-history-section, .enemy-battle-history-section {
+    background-color: #132b5c54;
+    border: 2px solid #f0f8ffc9;
+    padding: 12px;
+    border-radius: 15px;
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    align-items: center;
+    width: 180px;
+}
+
+.enemy-battle-history-section {
+    grid-column-start: 3;
+}
+
+#battle-result {
+    text-align: center;
+}
+
+.end-battle-button {
+    width: 152px;
+    height: 44px;
+    font-size: 24px;
+}
+
+.simple-column-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.simple-row-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+
+.attack {
+    font-size: 48px;
+}
+
+#map {
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+#map-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 20px;
+    margin-top: 20px;
+    align-items: center;
+}
+
+#move-controlls-touch {
+    background-color: #70707057;
+    border: 8px solid rgb(116 116 116);
+    border-radius: 100%;
+}
+
+#inner-move-control-touch {
+    background-color: #333445;
+    border-radius: 100%;
+    position: relative;
+}
+
+#move-controlls {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#map-section button {
+    display: flex;
+    height: 60px;
+    width: 184px;
+    margin: 12px;
+    font-size: 32px;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width: 1100px) {
+    .pet-cards {
+        grid-template-columns: auto auto;
+    }
+}
+
+@media (max-width: 760px) {
+    .title {
+        font-size: 72px;
+        margin: 0px;
+    }
+
+    .pet-cards {
+        grid-template-columns: auto;
+    }
+
+    #pet-select-button {
+        width: 320px;
+    }
+
+    .subtitle {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 470px) {
+
+    @keyframes battle-title {
+        0% { top: 150%; }
+        30% { top: 50%; font-size: 60px; }
+        50% { font-size: 80px; }
+        70% { top: 50%; font-size: 60px;}
+        100% { top: -50%; }
+    }
+
+    h2 {
+        font-size: 38px;
+    }
+
+    h3 {
+        font-size: 24px;
+    }
+
+    h1 {
+        font-size: 60px;
+    }
+    
+    #title-section {
+        margin-top: 24px;
+    }
+
+    .title {
+        font-size: 52px;
+    }
+
+    .subtitle {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .pet-card {
+        width: 300px;
+        font-size: 18px;
+    }
+
+    #pet-select-button {
+        width: 300px;
+    }
+
+    #attack-buttons {
+        gap: 8px;
+    }
+
+    .attack-button {
+        width: 108px;
+        font-size: 16px;
+    }
+
+    #battle-history-section {
+        grid-template-columns: 45% 10% 45%;
+        width: 90%;
+    }
+
+    .player-battle-history-section, .enemy-battle-history-section {
+        width: 160px;
+    }
+
+    #battle {
+        width: 300px;
+    }
+
+    .pet img {
+        width: 112px;
+    }
+
+    .pet {
+        font-size: 20px;
+        line-height: 6px;
+    }
+
+    .attack {
+        font-size: 32px;
+    }
+
+    #map-section button {
+        height: 50px;
+        width: 84px;
+        font-size: 16px;
+        margin: 4px;
+    }
+}
