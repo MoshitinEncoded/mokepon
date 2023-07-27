@@ -133,9 +133,10 @@ app.get('/mokepon/:playerId/attackSequence', (req, res) => {
 
     const playerId = req.params.playerId || '';
     const player = getPlayer(playerId);
-
+    const attackSequence = (player !== undefined) ? player.attackSequence : [];
+    
     res.send({
-        attackSequence: player.attackSequence || []
+        attackSequence: attackSequence || []
     });
 })
 
@@ -156,7 +157,7 @@ app.post('/mokepon/:playerId/attackSequence', (req, res) => {
 app.put('/mokepon/:playerId/isActive', (req, res) => {
 
     const playerId = req.params.playerId || '';
-    const playerIsActive = req.body.isActive || undefined;
+    const playerIsActive = req.body.isActive;
     
     const playerIndex = getPlayerIndex(playerId);
 
