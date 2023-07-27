@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
     <head>
 
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>MOKEPÓN!</title>
+        <title>MOKEPON!</title>
         <link rel="stylesheet" href="./styles.css">
 
     </head>
@@ -16,22 +16,22 @@
         <div id="background-color">
 
             <section id="title-section">
-                <h1 class="title">MOKEPÓN!</h1>
+                <h1 id="title" class="title">MOKEPON!</h1>
                 <div class="subtitle">
-                    <h4>Tienes que atraparlos! 🎵</h4>
-                    <h4>No me demanden por favooor! 🎵</h4>
-                    <h4>MOKEPÓN! 🎵</h4>
+                    <h4 id="subtitle1">You have to catch'em all! 🎵</h4>
+                    <h4 id="subtitle2">Do not sue me pleaaaaase! 🎵</h4>
+                    <h4 id="subtitle3">MOKEPON! 🎵</h4>
                 </div>
             </section>
 
             <section id="pet-selection">
-                <h2>Elige a tu mokepón</h2>
+                <h2 id="pet-select-title">Choose your mokepon</h2>
                 <div id="pet-cards" class="pet-cards"></div>
-                <button id="pet-select-button">Continuar</button>
+                <button id="pet-select-button">Continue</button>
             </section>
 
             <section id="loading-section" class="transition">
-                <h1>Loading...</h1>
+                <h1 id="loading-title">Loading...</h1>
             </section>
 
             <section class="transition">
@@ -42,7 +42,7 @@
 
             <section id="map-section">
                 <canvas id="map">
-                    ERROR: Tu navegador no es compatible con el Canvas
+                    ERROR: Your browser it's not compatible with Canvas.
                 </canvas>
                 <div id="move-controlls"></div>
             </section>
@@ -50,7 +50,7 @@
             <section id="battle-section">
 
                 <div id="attack-selection">
-                    <h2>Elige un ataque</h2>
+                    <h2 id="attacks-select-title">Choose your attacks</h2>
                     <div id="attack-buttons"></div>
                 </div>
 
@@ -59,7 +59,7 @@
                         <img src="./assets/mokepons_mokepon_hipodoge_attack.png" alt="ERROR" id="player-pet-image">
                         <div class="pet-description">
                             <p id="player-pet-name"></p>
-                            <p>Victorias: <span id="player-lifes">0</span></p>
+                            <p id="player-victories">Victories: 0</p>
                         </div>
                     </div>
                     <h2>VS</h2>
@@ -67,7 +67,7 @@
                         <img src="./assets/mokepons_mokepon_ratigueya_attack.png" alt="ERROR" id="enemy-pet-image">
                         <div class="pet-description">
                             <p id="enemy-pet-name"></p>
-                            <p>Victorias: <span id="enemy-lifes">0</span></p>
+                            <p id="enemy-victories">Victories: 0</p>
                         </div>
                     </div>
                 </div>
@@ -76,19 +76,19 @@
                     <div class="simple-column-container">
                         <h3 id="battle-result"></h3>
                         <div id="end-battle-buttons" class="simple-row-container">
-                            <button id="continue-button" class="end-battle-button">Continuar</button>
-                            <button id="restart-button" class="end-battle-button">Reiniciar</button>
+                            <button id="continue-button" class="end-battle-button">Continue</button>
+                            <button id="restart-button" class="end-battle-button">Restart</button>
                         </div>
                     </div>
                 </div>
 
                 <div id="battle-history-section">
                     <div class="player-battle-history-section">
-                        <h3>Jugador</h3>
+                        <h3 id="player-title">Player</h3>
                         <div id="player-battle-history"></div>
                     </div>
                     <div class="enemy-battle-history-section">
-                        <h3>Enemigo</h3>
+                        <h3 id="enemy-title">Enemy</h3>
                         <div id="enemy-battle-history"></div>
                     </div>
                 </div>

@@ -363,7 +363,8 @@ class Player {
     }
 }
 
-const SERVER = new Server('http://192.168.1.9:8080');
+const SERVER_ROOT = location.href.slice(0, -1);
+const SERVER = new Server(SERVER_ROOT);
 
 // Background
 const BACKGROUND_COLOR = document.getElementById('background-color');
@@ -394,10 +395,10 @@ const BATTLE_TITLE = document.getElementById('battle-title');
 const BATTLE_SECTION = document.getElementById('battle-section');
 const PLAYER_PET_NAME = document.getElementById('player-pet-name');
 const PLAYER_PET_IMAGE = document.getElementById('player-pet-image');
-const PLAYER_BATTLE_WINS = document.getElementById('player-lifes');
+const PLAYER_BATTLE_WINS = document.getElementById('player-victories');
 const ENEMY_PET_NAME = document.getElementById('enemy-pet-name');
 const ENEMY_PET_IMAGE = document.getElementById('enemy-pet-image');
-const ENEMY_BATTLE_WINS = document.getElementById('enemy-lifes');
+const ENEMY_BATTLE_WINS = document.getElementById('enemy-victories');
 const BATTLE_RESULT = document.getElementById('battle-result');
 
 // Battle history
@@ -415,45 +416,18 @@ const WATER = '💧';
 const PLANT = '🌱';
 
 // Battle results
-const WIN = '¡GANASTE! 😎✨';
-const TIE = '🤜¡Es un empate!🤛';
-const LOSE = 'Lo siento bro, perdiste 😢';
+let win;
+let tie;
+let lose;
 
 const PLAYER = new Player();
 let enemyPlayer = new Player();
 
-const WATER_ATTACKS = [
-    { type: WATER, name: 'Disparo', id: 'water-shot-attack-button' },
-    { type: WATER, name: 'Chorro', id: 'waterjet-attack-button' },
-    { type: WATER, name: 'Balde Helado', id: 'ice-bucket-attack-button' },
-    { type: FIRE, name: 'Disparo', id: 'fire-shot-attack-button' },
-    { type: PLANT, name: 'Arenizca', id: 'dirty-play-attack-button' }
-]
+let waterAttacks;
+let plantAttacks;
+let fireAttacks;
 
-const PLANT_ATTACKS = [
-    { type: PLANT, name: 'Arenizca', id: 'dirty-play-attack-button' },
-    { type: PLANT, name: 'Bofetada', id: 'punch-attack-button' },
-    { type: PLANT, name: 'Temblor', id: 'mini-earthquake-attack-button' },
-    { type: FIRE, name: 'Disparo', id: 'fire-shot-attack-button' },
-    { type: WATER, name: 'Disparo', id: 'water-shot-attack-button' }
-]
-
-const FIRE_ATTACKS = [
-    { type: FIRE, name: 'Disparo', id: 'fire-shot-attack-button' },
-    { type: FIRE, name: 'Chispas', id: 'sparks-attack-button' },
-    { type: FIRE, name: 'Llamarada', id: 'fire-blaze-attack-button' },
-    { type: WATER, name: 'Disparo', id: 'water-shot-attack-button' },
-    { type: PLANT, name: 'Arenizca', id: 'dirty-play-attack-button' }
-]
-
-const MOKEPONS = [
-    new Mokepon('Hipodoge', WATER, WATER_ATTACKS, 'Le gusta jugar bromas en baños públicos.', './assets/mokepons_mokepon_hipodoge_attack.png', './assets/hipodoge.png'),
-    new Mokepon('Capipepo', PLANT, PLANT_ATTACKS, 'Peleó mano a mano contra una planta y perdió.', './assets/mokepons_mokepon_capipepo_attack.png', './assets/capipepo.png'),
-    new Mokepon('Ratigueya', FIRE, FIRE_ATTACKS, 'Le gusta saquear y le gusta el peligro, por eso saquea refrigeradores.', './assets/mokepons_mokepon_ratigueya_attack.png', './assets/ratigueya.png'),
-    new Mokepon('Pydos', WATER, WATER_ATTACKS, 'El único mokepón que sí aparece en la serie.', './assets/mokepons_mokepon_pydos_attack.png','./assets/mokepons_mokepon_pydos_attack.png'),
-    new Mokepon('Tucapalma', PLANT, PLANT_ATTACKS, 'Casi actuó en Winter, pero un pelícano le robó el papel.', './assets/mokepons_mokepon_tucapalma_attack.png','./assets/mokepons_mokepon_tucapalma_attack.png'),
-    new Mokepon('Langostelvis', FIRE, FIRE_ATTACKS, 'Trataron de cocinarlo; ahora es el chef.', './assets/mokepons_mokepon_langostelvis_attack.png','./assets/mokepons_mokepon_langostelvis_attack.png')
-];
+let mokepons;
 
 let innerMoveTouchControl;
 let innerMoveTouchControlRect;
@@ -477,9 +451,88 @@ let battleLoopInterval;
 
 let isTouchDevice = false;
 
+let language;
+function setLanguage() {
+    fetch("/languages/"+getUserLanguage()+".json").then(res => {
+        if (res.ok) {
+            res.json().then(data => {
+                language = data;
+                initializeGame();
+            })
+        }
+    })
+}
+
+function getUserLanguage() {
+    const userLocale =
+        (navigator.languages && navigator.languages.length > 0)
+            ? navigator.languages[0]
+            : navigator.language;
+
+    return userLocale.split("-")[0];
+}
+
+function initializeGame() {
+
+    win = language.win;
+    tie = language.tie;
+    lose = language.lose;
+
+    waterAttacks = [
+        { type: WATER, name: language.waterAttack1, id: 'water-attack-1-button' },
+        { type: WATER, name: language.waterAttack2, id: 'water-attack-2-button' },
+        { type: WATER, name: language.waterAttack3, id: 'water-attack-3-button' },
+        { type: FIRE, name: language.fireAttack1, id: 'fire-attack-1-button' },
+        { type: PLANT, name: language.plantAttack1, id: 'plant-attack-1-button' }
+    ]
+
+    plantAttacks = [
+        { type: PLANT, name: language.plantAttack1, id: 'plant-attack-1-button' },
+        { type: PLANT, name: language.plantAttack2, id: 'plant-attack-2-button' },
+        { type: PLANT, name: language.plantAttack3, id: 'plant-attack-3-button' },
+        { type: FIRE, name: language.fireAttack1, id: 'fire-attack-1-button' },
+        { type: WATER, name: language.waterAttack1, id: 'water-attack-1-button' }
+    ]
+
+    fireAttacks = [
+        { type: FIRE, name: language.fireAttack1, id: 'fire-attack-1-button' },
+        { type: FIRE, name: language.fireAttack2, id: 'fire-attack-2-button' },
+        { type: FIRE, name: language.fireAttack3, id: 'fire-attack-3-button' },
+        { type: WATER, name: language.waterAttack1, id: 'water-attack-1-button' },
+        { type: PLANT, name: language.plantAttack1, id: 'plant-attack-1-button' }
+    ]
+
+    mokepons = [
+        new Mokepon('Hipodoge', WATER, waterAttacks, language.hipodogeDescription, './assets/mokepons_mokepon_hipodoge_attack.png', './assets/hipodoge.png'),
+        new Mokepon('Capipepo', PLANT, plantAttacks, language.capipepoDescription, './assets/mokepons_mokepon_capipepo_attack.png', './assets/capipepo.png'),
+        new Mokepon('Ratigueya', FIRE, fireAttacks, language.ratigueyaDescription, './assets/mokepons_mokepon_ratigueya_attack.png', './assets/ratigueya.png'),
+        new Mokepon('Pydos', WATER, waterAttacks, language.pydosDescription, './assets/mokepons_mokepon_pydos_attack.png','./assets/mokepons_mokepon_pydos_attack.png'),
+        new Mokepon('Tucapalma', PLANT, plantAttacks, language.tucapalmaDescription, './assets/mokepons_mokepon_tucapalma_attack.png','./assets/mokepons_mokepon_tucapalma_attack.png'),
+        new Mokepon('Langostelvis', FIRE, fireAttacks, language.langostelvisDescription, './assets/mokepons_mokepon_langostelvis_attack.png','./assets/mokepons_mokepon_langostelvis_attack.png')
+    ];
+
+    document.getElementById('title').innerHTML = language.title;
+    document.getElementById('subtitle1').innerHTML = language.subtitle1;
+    document.getElementById('subtitle2').innerHTML = language.subtitle2;
+    document.getElementById('subtitle3').innerHTML = language.subtitle3;
+    document.getElementById('pet-select-title').innerHTML = language.petSelect;
+    PET_SELECT_BUTTON.innerHTML = language.continue;
+    document.getElementById('loading-title').innerHTML = language.loading;
+    BATTLE_TITLE.innerHTML = language.battleShout;
+    CONTINUE_BUTTON.innerHTML = language.continue;
+    RESTART_BUTTON.innerHTML = language.restart;
+    document.getElementById('player-title').innerHTML = language.player;
+    document.getElementById('enemy-title').innerHTML = language.enemy;
+    document.getElementById('attacks-select-title').innerHTML = language.attacksSelect;
+    PLAYER_BATTLE_WINS.innerHTML = language.victories + ": 0";
+    ENEMY_BATTLE_WINS.innerHTML = language.victories + ": 0";
+
+    startGame();
+}
+
 function startGame() {
 
-    PET_SELECT_BUTTON.addEventListener('click', () => { confirmPlayerPet(); joinOnlineParty(); });
+    PET_SELECT_BUTTON.addEventListener('click', () => { confirmPlayerPet(); });
     CONTINUE_BUTTON.addEventListener('click', () => { unloadBattle(); loadMap(); });
     RESTART_BUTTON.addEventListener('click', () => { leaveParty(); location.reload(); });
 
@@ -501,7 +554,7 @@ function startGame() {
 /** Adds the pet cards for pet selection to the DOM. */
 function addPetCards() {
 
-    MOKEPONS.forEach((mokepon) => {
+    mokepons.forEach((mokepon) => {
         PET_CARDS.innerHTML += `
         <input type="radio" name="pet-card" id="radio-${mokepon.name.toLowerCase()}" class="hidden" />
         <label class="pet-card" for="radio-${mokepon.name.toLowerCase()}">
@@ -524,7 +577,7 @@ function addPetCards() {
  */
 function selectPlayerPet(e) {
     const petSelectedInput = e.target
-    PLAYER.pet = MOKEPONS.find(mokepon => `radio-${mokepon.name.toLowerCase()}` == petSelectedInput.id)
+    PLAYER.pet = mokepons.find(mokepon => `radio-${mokepon.name.toLowerCase()}` == petSelectedInput.id)
 }
 
 /** Confirms the player pet selected. */
@@ -537,6 +590,8 @@ function confirmPlayerPet() {
 
     PLAYER_PET_NAME.innerHTML = PLAYER.pet.name;
     PLAYER_PET_IMAGE.src = PLAYER.pet.imageURL;
+
+    joinOnlineParty();
 }
 
 /** Joins the player to the online party. */
@@ -833,7 +888,7 @@ function updateEnemies(enemyPlayersData) {
 
         let enemyPlayer = new Player();
         enemyPlayer.id = enemyData.id;
-        enemyPlayer.pet = MOKEPONS.find(mokepon => mokepon.name === enemyPetName);
+        enemyPlayer.pet = mokepons.find(mokepon => mokepon.name === enemyPetName);
         enemyPlayer.position = { x: enemyData.x, y: enemyData.y };
         enemyPlayer.battleEnemy = enemyData.battleEnemy;
         enemyPlayer.isActive = enemyData.isActive;
@@ -989,16 +1044,16 @@ function resolveFight(playerAttack, enemyAttack) {
     let fightResult
 
     if (playerAttack.type == enemyAttack.type) {
-        fightResult = TIE
+        fightResult = tie
     } else if (
         playerAttack.type == FIRE && enemyAttack.type == PLANT || 
         playerAttack.type == WATER && enemyAttack.type == FIRE || 
         playerAttack.type == PLANT && enemyAttack.type == WATER) {
             PLAYER.battleWins++
-            fightResult =  WIN
+            fightResult =  win
     } else {
         enemyPlayer.battleWins++
-        fightResult =  LOSE
+        fightResult =  lose
     }
 
     displayFightResult(playerAttack, enemyAttack, fightResult)
@@ -1006,8 +1061,8 @@ function resolveFight(playerAttack, enemyAttack) {
 
 /** Displays the fight result in the battle history. */
 function displayFightResult(playerAttack, enemyAttack, fightResult) {
-    insertBattleHistoryMessage(PLAYER_BATTLE_HISTORY, playerAttack, fightResult == WIN)
-    insertBattleHistoryMessage(ENEMY_BATTLE_HISTORY, enemyAttack, fightResult == LOSE)
+    insertBattleHistoryMessage(PLAYER_BATTLE_HISTORY, playerAttack, fightResult == win)
+    insertBattleHistoryMessage(ENEMY_BATTLE_HISTORY, enemyAttack, fightResult == lose)
 }
 
 /** Inserts one fight result into the battle history of the player. */
@@ -1022,23 +1077,23 @@ function insertBattleHistoryMessage(battleHistory, attack, winCondition) {
 
 /** Displays the battle wins in the DOM. */
 function drawBattleWins() {
-    PLAYER_BATTLE_WINS.innerHTML = PLAYER.battleWins
-    ENEMY_BATTLE_WINS.innerHTML = enemyPlayer.battleWins
+    PLAYER_BATTLE_WINS.innerHTML = language.victories+": "+PLAYER.battleWins;
+    ENEMY_BATTLE_WINS.innerHTML = language.victories+": "+enemyPlayer.battleWins;
 }
 
 /** Ends the battle, displaying the battle result in the DOM. */
 function endBattle() {
 
     if (enemyPlayer.isActive === false) {
-        BATTLE_RESULT.innerHTML = 'Tu oponente se ha desconectado, ' + WIN;
+        BATTLE_RESULT.innerHTML = 'Tu oponente se ha desconectado, ' + win;
         addVictory(PLAYER);
     } else if (PLAYER.battleWins == enemyPlayer.battleWins) {
-        BATTLE_RESULT.innerHTML = TIE
+        BATTLE_RESULT.innerHTML = tie
     } else if (PLAYER.battleWins > enemyPlayer.battleWins) {
-        BATTLE_RESULT.innerHTML = WIN
+        BATTLE_RESULT.innerHTML = win
         addVictory(PLAYER);
     } else {
-        BATTLE_RESULT.innerHTML = LOSE
+        BATTLE_RESULT.innerHTML = lose
     }
 
     END_BATTLE_BUTTONS.style.display = 'flex';
@@ -1125,7 +1180,7 @@ function scale (value, inMin, inMax, outMin, outMax) {
     return (value - inMin) / (inMax - inMin) * (outMax - outMin) + outMin;
 }
 
-window.addEventListener('load', startGame);
+window.addEventListener('load', setLanguage);
 document.addEventListener('visibilitychange', () => {
 
     if (PLAYER.id !== '' && !isTouchDevice) {

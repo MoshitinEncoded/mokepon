@@ -1,0 +1,43 @@
+{
+    "loading" : "Loading...",
+
+    "title" : "MOKEPON!",
+    "subtitle1" : "You have to catch'em all! 🎵",
+    "subtitle2" : "Do not sue me pleaaaaase! 🎵",
+    "subtitle3" : "MOKEPON! 🎵",
+
+    "petSelect" : "Choose your mokepon",
+    "hipodogeDescription" : "He likes to play pranks in public toilets.",
+    "capipepoDescription" : "He fought hand to hand against a plant and lost.",
+    "ratigueyaDescription" : "He likes looting and he likes danger, so he loots refrigerators.",
+    "pydosDescription" : "The only mokepon that does appear in the series.",
+    "tucapalmaDescription" : "He almost acted in Winter, but a pelican stole the role.",
+    "langostelvisDescription" : "They tried to cook him; now he is the chef.",
+
+    "battleShout" : "BATTLE!",
+
+    "player" : "Player",
+    "enemy" : "Enemy",
+    "victories" : "Victories",
+
+    "attacksSelect" : "Choose your attacks",
+
+    "waterAttack1" : "Shot",
+    "waterAttack2" : "Waterjet",
+    "waterAttack3" : "Ice bucket",
+
+    "plantAttack1" : "Sandstone",
+    "plantAttack2" : "Slap",
+    "plantAttack3" : "Quake",
+
+    "fireAttack1" : "Shot",
+    "fireAttack2" : "Sparks",
+    "fireAttack3" : "Flare",
+
+    "win" : "YOU WIN! 😎✨",
+    "tie" : "🤜It's a tie!🤛",
+    "lose" : "Sorry bro, you lose 😢",
+
+    "continue" : "Continue",
+    "restart" : "Restart"
+}

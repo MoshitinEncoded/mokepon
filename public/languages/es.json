@@ -1,0 +1,43 @@
+{
+    "loading" : "Cargando...",
+
+    "title" : "MOKEPÓN!",
+    "subtitle1" : "Tienes que atraparlos! 🎵",
+    "subtitle2" : "No me demanden por favooor! 🎵",
+    "subtitle3" : "MOKEPÓN! 🎵",
+
+    "petSelect" : "Elige a tu mokepón",
+    "hipodogeDescription" : "Le gusta jugar bromas en baños públicos.",
+    "capipepoDescription" : "Peleó mano a mano contra una planta y perdió.",
+    "ratigueyaDescription" : "Le gusta saquear y le gusta el peligro, por eso saquea refrigeradores.",
+    "pydosDescription" : "El único mokepón que sí aparece en la serie.",
+    "tucapalmaDescription" : "Casi actuó en Winter, pero un pelícano le robó el papel.",
+    "langostelvisDescription" : "Trataron de cocinarlo; ahora es el chef.",
+
+    "battleShout" : "PELEEN!",
+
+    "player" : "Jugador",
+    "enemy" : "Enemigo",
+    "victories" : "Victorias",
+
+    "attacksSelect" : "Elige tus ataques",
+
+    "waterAttack1" : "Disparo",
+    "waterAttack2" : "Chorro",
+    "waterAttack3" : "Balde Helado",
+
+    "plantAttack1" : "Arenizca",
+    "plantAttack2" : "Bofetada",
+    "plantAttack3" : "Temblor",
+
+    "fireAttack1" : "Disparo",
+    "fireAttack2" : "Chispas",
+    "fireAttack3" : "Llamarada",
+
+    "win" : "¡GANASTE! 😎✨",
+    "tie" : "🤜¡Es un empate!🤛",
+    "lose" : "Lo siento bro, perdiste 😢",
+
+    "continue" : "Continuar",
+    "restart" : "Reiniciar"
+}
