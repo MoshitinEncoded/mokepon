@@ -103,6 +103,7 @@ button {
     font-family: 'Itim';
     border-radius: 20px;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
 button:hover {
@@ -176,6 +177,7 @@ button:active {
     border: 2px solid aliceblue;
     font-size: 20px;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
     align-items: flex-start;
 }
 
