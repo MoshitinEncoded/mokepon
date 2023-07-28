@@ -363,6 +363,11 @@ class Player {
     }
 }
 
+HTMLMediaElement.prototype.stop = function() {
+    this.pause();
+    this.currentTime = 0;
+}
+
 const SERVER_ROOT = location.href.slice(0, -1);
 const SERVER = new Server(SERVER_ROOT);
 
@@ -414,6 +419,27 @@ const RESTART_BUTTON = document.getElementById('restart-button');
 const FIRE = '🔥';
 const WATER = '💧';
 const PLANT = '🌱';
+
+// Audios
+const MAP_MUSIC = new Audio("./assets/map_music.mp3");
+MAP_MUSIC.loop = true;
+MAP_MUSIC.volume = 0.6;
+
+const BATTLE_MUSIC = new Audio("./assets/battle_music.mp3");
+BATTLE_MUSIC.loop = true;
+BATTLE_MUSIC.volume = 0.2;
+
+const BUTTON_SELECT_SOUND = new Audio("./assets/button_select.mp3");
+BUTTON_SELECT_SOUND.volume = 0.4;
+const BUTTON_CLICK_SOUND = new Audio("./assets/button_click.mp3");
+BUTTON_CLICK_SOUND.volume = 0.4;
+
+const GAME_START_SOUND = new Audio("./assets/game_start.mp3");
+
+const BATTLE_WIN_SOUND = new Audio("./assets/battle_win.mp3");
+BATTLE_WIN_SOUND.volume = 0.3;
+const BATTLE_LOSE_SOUND = new Audio("./assets/battle_lose.mp3");
+BATTLE_LOSE_SOUND.volume = 0.3;
 
 // Battle results
 let win;
@@ -533,15 +559,18 @@ function initializeGame() {
 function startGame() {
 
     PET_SELECT_BUTTON.addEventListener('click', () => { confirmPlayerPet(); });
-    CONTINUE_BUTTON.addEventListener('click', () => { unloadBattle(); loadMap(); });
+    PET_SELECT_BUTTON.addEventListener('mouseenter', playButtonSelectSound );
+    CONTINUE_BUTTON.addEventListener('click', () => { unloadBattle(); loadMap(); playButtonClickSound(); });
+    CONTINUE_BUTTON.addEventListener('mouseenter', playButtonSelectSound);
     RESTART_BUTTON.addEventListener('click', () => { leaveParty(); location.reload(); });
+    RESTART_BUTTON.addEventListener('mouseenter', playButtonSelectSound);
 
     MOVE_CONTROLLS.addEventListener('touchstart', handleTouchpadStart);
     MOVE_CONTROLLS.addEventListener('touchend', handleTouchpadEnd);
     MOVE_CONTROLLS.addEventListener('touchmove', handleTouchpadMove);
     MOVE_CONTROLLS.addEventListener('touchcancel', handleTouchpadEnd);
 
-    document.addEventListener('touchstart', () => { isTouchDevice = true });
+    document.addEventListener('touchstart', () => isTouchDevice = true );
 
     MAP_SECTION.style.display = 'none';
     BATTLE_SECTION.style.display = 'none';
@@ -568,7 +597,12 @@ function addPetCards() {
         `
     })
 
-    PET_CARDS.addEventListener('change', selectPlayerPet)
+    PET_CARDS.addEventListener('change', selectPlayerPet);
+
+    const petCardElements = PET_CARDS.getElementsByClassName('pet-card');
+    for(var i = 0; i < petCardElements.length; i++) {
+        petCardElements[i].addEventListener('mouseenter', playButtonSelectSound);
+    }
 }
 
 /**
@@ -576,8 +610,9 @@ function addPetCards() {
  * @param {Event} e Pet card selected event.
  */
 function selectPlayerPet(e) {
-    const petSelectedInput = e.target
-    PLAYER.pet = mokepons.find(mokepon => `radio-${mokepon.name.toLowerCase()}` == petSelectedInput.id)
+    const petSelectedInput = e.target;
+    PLAYER.pet = mokepons.find(mokepon => `radio-${mokepon.name.toLowerCase()}` == petSelectedInput.id);
+    playButtonClickSound();
 }
 
 /** Confirms the player pet selected. */
@@ -590,6 +625,8 @@ function confirmPlayerPet() {
 
     PLAYER_PET_NAME.innerHTML = PLAYER.pet.name;
     PLAYER_PET_IMAGE.src = PLAYER.pet.imageURL;
+
+    GAME_START_SOUND.play();
 
     joinOnlineParty();
 }
@@ -626,9 +663,11 @@ function addPlayerAttackButtons() {
         attackButton.className = 'attack-button'
         attackButton.innerHTML = `${attack.name} ${attack.type}`
 
+        attackButton.addEventListener('mouseenter', playButtonSelectSound);
         attackButton.addEventListener('click', () => {
             PLAYER.attackSequence.push(attack)
             attackButton.disabled = true
+            playButtonClickSound();
 
             if (PLAYER.attackSequenceCompleted()) {
                 SERVER.setAttackSequence(PLAYER.id, PLAYER.attackSequence);
@@ -688,6 +727,8 @@ function loadMap() {
         MAP_SECTION.style.display = 'flex';
         BACKGROUND_COLOR.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
         LOADING_SECTION.style.display = 'none';
+
+        MAP_MUSIC.play();
 
         window.addEventListener('keydown', updateMovementKeyPressed);
         window.addEventListener('keyup', updateMovementKeyReleased);
@@ -937,6 +978,7 @@ function checkCollisionWith(enemy) {
     setBattleEnemy(PLAYER, enemy.id);
     enemy.battleEnemy = PLAYER.id;
 
+    unloadMap();
     loadBattle();
 }
 
@@ -962,6 +1004,8 @@ function selectEnemy(enemy) {
 function unloadMap() {
     window.removeEventListener('keydown', updateMovementKeyPressed);
     window.removeEventListener('keyup', updateMovementKeyReleased);
+
+    MAP_MUSIC.stop();
 }
 
 /** Loads the battle section. */
@@ -985,12 +1029,16 @@ function loadBattle() {
     BATTLE_TRANSITION.style.animation = 'battle-transition ' + battleTransitionDuration+'s';
     BATTLE_TITLE.style.animation = 'battle-title ' + battleTransitionDuration+'s';
 
+    BATTLE_MUSIC.play();
+
     // Show battle section
     setTimeout(() => {
 
         BATTLE_RESULT.innerHTML = '';
         END_BATTLE_BUTTONS.style.display = 'none';
+        PLAYER_BATTLE_WINS.innerHTML = language.victories+": 0";
         PLAYER_BATTLE_HISTORY.innerHTML = '';
+        ENEMY_BATTLE_WINS.innerHTML = language.victories+": 0";
         ENEMY_BATTLE_HISTORY.innerHTML = '';
     
         MAP_SECTION.style.display = 'none';
@@ -1085,16 +1133,20 @@ function drawBattleWins() {
 function endBattle() {
 
     if (enemyPlayer.isActive === false) {
-        BATTLE_RESULT.innerHTML = 'Tu oponente se ha desconectado, ' + win;
+        BATTLE_RESULT.innerHTML = language.enemyDisconnected+', '+win;
         addVictory(PLAYER);
     } else if (PLAYER.battleWins == enemyPlayer.battleWins) {
         BATTLE_RESULT.innerHTML = tie
     } else if (PLAYER.battleWins > enemyPlayer.battleWins) {
         BATTLE_RESULT.innerHTML = win
         addVictory(PLAYER);
+        BATTLE_WIN_SOUND.play();
     } else {
         BATTLE_RESULT.innerHTML = lose
+        BATTLE_LOSE_SOUND.play();
     }
+
+    BATTLE_MUSIC.stop();
 
     END_BATTLE_BUTTONS.style.display = 'flex';
     setCanBattle(PLAYER, false);
@@ -1142,6 +1194,22 @@ function setCanBattle(player, canBattle, onSetted = undefined) {
 function setBattleEnemy(player, battleEnemy, onSetted = undefined) {
     player.battleEnemy = battleEnemy;
     SERVER.setBattleEnemy(PLAYER.id, battleEnemy, onSetted);
+}
+
+/** Plays the button select sound (PC only). */
+function playButtonSelectSound() {
+    if (isTouchDevice) {
+        return;
+    }
+
+    BUTTON_SELECT_SOUND.stop();
+    BUTTON_SELECT_SOUND.play();
+}
+
+/** Plays the button clicked sound. */
+function playButtonClickSound() {
+    BUTTON_CLICK_SOUND.stop();
+    BUTTON_CLICK_SOUND.play();
 }
 
 /**
