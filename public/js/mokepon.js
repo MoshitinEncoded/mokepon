@@ -382,7 +382,8 @@ const PET_SELECTION = document.getElementById('pet-selection');
 const PET_SELECT_BUTTON = document.getElementById('pet-select-button');
 const PET_CARDS = document.getElementById('pet-cards');
 
-const LOADING_SECTION = document.getElementById('loading-section');
+const LOADING_TRANSITION = document.getElementById('loading-transition');
+const LOADING_TITLE = document.getElementById('loading-title');
 
 // Map section
 const MAP_SECTION = document.getElementById('map-section');
@@ -543,7 +544,7 @@ function initializeGame() {
     document.getElementById('subtitle3').innerHTML = language.subtitle3;
     document.getElementById('pet-select-title').innerHTML = language.petSelect;
     PET_SELECT_BUTTON.innerHTML = language.continue;
-    document.getElementById('loading-title').innerHTML = language.loading;
+    LOADING_TITLE.innerHTML = language.loading;
     BATTLE_TITLE.innerHTML = language.battleShout;
     CONTINUE_BUTTON.innerHTML = language.continue;
     RESTART_BUTTON.innerHTML = language.restart;
@@ -575,7 +576,6 @@ function startGame() {
     MAP_SECTION.style.display = 'none';
     BATTLE_SECTION.style.display = 'none';
     END_BATTLE_BUTTONS.style.display = 'none';
-    LOADING_SECTION.style.display = 'none';
 
     addPetCards()
 }
@@ -720,13 +720,24 @@ function calculateMapSize() {
 /** Loads the map section. */
 function loadMap() {
 
-    LOADING_SECTION.style.display = 'flex';
+    // Resets animations
+    LOADING_TRANSITION.style.animation = 'none';
+    LOADING_TITLE.style.animation = 'none';
+    LOADING_TRANSITION.offsetHeight;
 
-    setCanBattle(PLAYER, false, () => {
+    // Starts loading transition
+    let loadingTransitionDuration = 3;
+    LOADING_TRANSITION.style.animation = 'loading-transition-start ' + loadingTransitionDuration*0.5+'s forwards';
+    LOADING_TITLE.style.animation = 'loading-title-start ' + loadingTransitionDuration*0.5+'s forwards';
+
+    setTimeout(() => setCanBattle(PLAYER, false, () => {
 
         MAP_SECTION.style.display = 'flex';
         BACKGROUND_COLOR.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-        LOADING_SECTION.style.display = 'none';
+
+        // Ends the loading transition
+        LOADING_TRANSITION.style.animation = 'loading-transition-end ' + loadingTransitionDuration*0.5+'s';
+        LOADING_TITLE.style.animation = 'loading-title-end ' + loadingTransitionDuration*0.5+'s';
 
         MAP_MUSIC.play();
 
@@ -735,7 +746,7 @@ function loadMap() {
 
         gameLoopInterval = setInterval(updateMap, 1000/60);
         setTimeout(() => setCanBattle(PLAYER, true), 3000);
-    });
+    }), 1000*loadingTransitionDuration*0.5);
 }
 
 /** Updates the map and the players. */

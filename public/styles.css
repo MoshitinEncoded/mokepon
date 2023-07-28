@@ -1,5 +1,25 @@
 @import url('https://fonts.googleapis.com/css2?family=Nerko+One&family=Itim&family=Sigmar&display=swap');
 
+@keyframes loading-transition-start {
+    0% { top: -100% }
+    100% { top: 0px }
+}
+
+@keyframes loading-transition-end {
+    0% { top: 0px }
+    100% { top: 100% }
+}
+
+@keyframes loading-title-start {
+    0% { top: 150%; }
+    100% { top: 50%; }
+}
+
+@keyframes loading-title-end {
+    0% { top: 50%; }
+    100% { top: -50%; }
+}
+
 @keyframes battle-transition {
     0% { top: -100% }
     30% { top: 0px }
@@ -129,30 +149,22 @@ button:active {
     grid-template-columns: auto auto auto;
 }
 
-#loading-section {
+#loading-transition, #battle-transition {
     background-color: black;
-    display: flex;
-    width: 100%;
-    height: 100%;
-    justify-content: center;
-    align-items: center;
-}
-
-#battle-transition {
-    background-color: black;
+    position: relative;
     top: -100%;
     width: 100%;
     height: 100%;
-    transition: top 1s;
     overflow: hidden;
 }
 
-#battle-title {
+#loading-title, #battle-title {
     position: relative;
     text-align: center;
     top: 150%;
     left: 50%;
     transform: translate(-50%, -50%);
+    font-size: 100px;
 }
 
 #attack-buttons {
@@ -497,5 +509,9 @@ input:checked + .pet-card {
         width: 84px;
         font-size: 16px;
         margin: 4px;
+    }
+
+    #loading-title {
+        font-size: 50px;
     }
 }
