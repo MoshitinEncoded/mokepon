@@ -37,6 +37,7 @@
     "win" : "YOU WIN! 😎✨",
     "tie" : "🤜It's a tie!🤛",
     "lose" : "Sorry bro, you lose 😢",
+    "enemyDisconnected" : "Your opponent has disconnected",
 
     "continue" : "Continue",
     "restart" : "Restart"
