@@ -416,6 +416,9 @@ const END_BATTLE_BUTTONS = document.getElementById('end-battle-buttons');
 const CONTINUE_BUTTON = document.getElementById('continue-button');
 const RESTART_BUTTON = document.getElementById('restart-button');
 
+const HELP_SECTION = document.getElementById('help-section');
+const HELP_CLOSE_BUTTON = document.getElementById('help-close-button');
+
 // Elements
 const FIRE = '🔥';
 const WATER = '💧';
@@ -480,7 +483,7 @@ let isTouchDevice = false;
 
 let language;
 function setLanguage() {
-    fetch("/languages/"+getUserLanguage()+".json").then(res => {
+    fetch("/languages/"+"en"+".json").then(res => {
         if (res.ok) {
             res.json().then(data => {
                 language = data;
@@ -542,6 +545,31 @@ function initializeGame() {
     document.getElementById('subtitle1').innerHTML = language.subtitle1;
     document.getElementById('subtitle2').innerHTML = language.subtitle2;
     document.getElementById('subtitle3').innerHTML = language.subtitle3;
+
+    const helpOpenButtons = document.getElementsByClassName('help-open-button');
+    for (var i = 0; i < helpOpenButtons.length; i++) {
+        helpOpenButtons[i].innerHTML = language.howToPlay;
+        helpOpenButtons[i].addEventListener('click', openHelpPanel);
+    }
+
+    document.getElementById('how-to-play').innerHTML = language.howToPlay;
+
+    document.getElementById('help-title-1').innerHTML = language.helpTitle1;
+    document.getElementById('help-text-1').innerHTML = language.helpText1;
+
+    document.getElementById('help-title-2').innerHTML = language.helpTitle2;
+    document.getElementById('help-text-2').innerHTML = language.helpText2;
+
+    document.getElementById('help-title-3').innerHTML = language.helpTitle3;
+    document.getElementById('help-text-3').innerHTML = language.helpText3;
+
+    document.getElementById('help-title-4').innerHTML = language.helpTitle4;
+    document.getElementById('help-text-4-1').innerHTML = language.helpText41;
+    document.getElementById('help-text-4-2').innerHTML = language.helpText42;
+    document.getElementById('help-text-4-3').innerHTML = language.helpText43;
+
+    HELP_CLOSE_BUTTON.innerHTML = language.close;
+
     document.getElementById('pet-select-title').innerHTML = language.petSelect;
     PET_SELECT_BUTTON.innerHTML = language.continue;
     LOADING_TITLE.innerHTML = language.loading;
@@ -554,17 +582,20 @@ function initializeGame() {
     PLAYER_BATTLE_WINS.innerHTML = language.victories + ": 0";
     ENEMY_BATTLE_WINS.innerHTML = language.victories + ": 0";
 
-    startGame();
-}
+    const buttons = document.getElementsByTagName('button');
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].addEventListener('mouseenter', playButtonSelectSound);
 
-function startGame() {
+        if (buttons[i].id === PET_SELECT_BUTTON.id) {
+            continue;
+        }
+        
+        buttons[i].addEventListener('click', playButtonClickSound);
+    }
 
     PET_SELECT_BUTTON.addEventListener('click', () => { confirmPlayerPet(); });
-    PET_SELECT_BUTTON.addEventListener('mouseenter', playButtonSelectSound );
-    CONTINUE_BUTTON.addEventListener('click', () => { unloadBattle(); loadMap(); playButtonClickSound(); });
-    CONTINUE_BUTTON.addEventListener('mouseenter', playButtonSelectSound);
+    CONTINUE_BUTTON.addEventListener('click', () => { unloadBattle(); loadMap(); });
     RESTART_BUTTON.addEventListener('click', () => { leaveParty(); location.reload(); });
-    RESTART_BUTTON.addEventListener('mouseenter', playButtonSelectSound);
 
     MOVE_CONTROLLS.addEventListener('touchstart', handleTouchpadStart);
     MOVE_CONTROLLS.addEventListener('touchend', handleTouchpadEnd);
@@ -573,6 +604,13 @@ function startGame() {
 
     document.addEventListener('touchstart', () => isTouchDevice = true );
 
+    HELP_CLOSE_BUTTON.addEventListener('click', closeHelpPanel);
+
+    startGame();
+}
+
+function startGame() {
+    HELP_SECTION.style.display = 'none';
     MAP_SECTION.style.display = 'none';
     BATTLE_SECTION.style.display = 'none';
     END_BATTLE_BUTTONS.style.display = 'none';
@@ -1013,9 +1051,6 @@ function selectEnemy(enemy) {
 
 /** Unloads the map section. */
 function unloadMap() {
-    window.removeEventListener('keydown', updateMovementKeyPressed);
-    window.removeEventListener('keyup', updateMovementKeyReleased);
-
     MAP_MUSIC.stop();
 }
 
@@ -1205,6 +1240,14 @@ function setCanBattle(player, canBattle, onSetted = undefined) {
 function setBattleEnemy(player, battleEnemy, onSetted = undefined) {
     player.battleEnemy = battleEnemy;
     SERVER.setBattleEnemy(PLAYER.id, battleEnemy, onSetted);
+}
+
+function openHelpPanel() {
+    HELP_SECTION.style.display = 'block';
+}
+
+function closeHelpPanel() {
+    HELP_SECTION.style.display = 'none';
 }
 
 /** Plays the button select sound (PC only). */

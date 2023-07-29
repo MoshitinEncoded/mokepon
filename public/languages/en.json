@@ -6,6 +6,23 @@
     "subtitle2" : "Do not sue me pleaaaaase! 🎵",
     "subtitle3" : "MOKEPON! 🎵",
 
+    "howToPlay" : "How to play",
+    "helpTitle1" : "Choose a mokepon.",
+    "helpText1" : "Every mokepon has its own element, making them weaker or stronger against other mokepons.",
+
+    "helpTitle2" : "Find an opponent.",
+    "helpText2" : "Move across the map in search of an opponent to fight with. The battle starts when 2 players collide.",
+
+    "helpTitle3" : "BATTLE!",
+    "helpText3" : "Do you know rock-paper-scissors game? <br> Well, the battle works like 5 of them in sequence but instead of rock, paper and scissors, we'll use 🔥, 💧 or 🌱.<br><br>Both players will have 5 attacks to choose from based on their mokepones. Each one must select the attacks in the order they want and at the end, when both have selected all of them, the sequence of attacks for both will be shown, as well as the results of the battle.",
+
+    "helpTitle4" : "How elements works:",
+    "helpText41" : "🔥 🤜 🌱",
+    "helpText42" : "🌱 🤜 💧",
+    "helpText43" : "💧 🤜 🔥",
+
+    "close" : "Close",
+
     "petSelect" : "Choose your mokepon",
     "hipodogeDescription" : "He likes to play pranks in public toilets.",
     "capipepoDescription" : "He fought hand to hand against a plant and lost.",

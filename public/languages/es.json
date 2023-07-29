@@ -6,6 +6,23 @@
     "subtitle2" : "No me demanden por favooor! 🎵",
     "subtitle3" : "MOKEPÓN! 🎵",
 
+    "howToPlay" : "Cómo jugar",
+    "helpTitle1" : "Elige un mokepón.",
+    "helpText1" : "Cada mokepón tiene su propio elemento, volviéndolos más fuertes o débiles contra otros mokepones.",
+
+    "helpTitle2" : "Busca un oponente.",
+    "helpText2" : "Muévete a través del mapa en busca de un oponente con quien pelear. La pelea comienza cuando 2 jugadores chocan.",
+
+    "helpTitle3" : "PELEEN!",
+    "helpText3" : "Conoces el juego piedra, papel o tijeras? <br> La pelea funciona como 5 de ellos en secuencia, solo que en lugar de piedra, papel o tijera, usaremos 🔥, 💧 o 🌱.<br><br>Ambos jugadores tendrán 5 ataques a escoger basados en sus mokepones. Cada uno deberá seleccionar los ataques en el orden que quiera y al final, cuando ambos hayan seleccionado todos, se mostrará la secuencia de ataques de ambos, así como los resultados de la pelea.",
+
+    "helpTitle4" : "Qué le gana a qué:",
+    "helpText41" : "🔥 🤜 🌱",
+    "helpText42" : "🌱 🤜 💧",
+    "helpText43" : "💧 🤜 🔥",
+
+    "close" : "Cerrar",
+
     "petSelect" : "Elige a tu mokepón",
     "hipodogeDescription" : "Le gusta jugar bromas en baños públicos.",
     "capipepoDescription" : "Peleó mano a mano contra una planta y perdió.",
