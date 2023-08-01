@@ -16,8 +16,7 @@ class Server {
             },
             body: JSON.stringify({
                 mokepon: player.pet.name,
-                x: player.position.x,
-                y: player.position.y
+                position: player.position
             })
         }).then(res => {
             if (res.ok) {
@@ -46,25 +45,38 @@ class Server {
     /**
      * Updates the player position on the server.
      * @param {Player} player Player to update.
-     * @param {(enemyPlayersData: *[]) => void} onPositionUpdate Callback to execute when the position has been updated.
+     * @param {(enemyPlayersData: *[]) => void} onCollision Callback to execute when the player has collided with another player.
      */
-    updatePlayerPosition(player, onPositionUpdate) {
+    updatePlayerPosition(player, onCollision) {
         fetch(`${this.root}/mokepon/${player.id}/position`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                x: player.position.x,
-                y: player.position.y
+                position: player.position,
+                size: player.size
             })
         }).then(res => {
             if (res.ok) {
-                res.json().then( ({ enemyPlayersData }) => onPositionUpdate(enemyPlayersData) );
+                res.json().then( ({ collidedEnemy }) => onCollision(collidedEnemy) );
             } else {
                 console.error('Could not post the player position.');
             }
         });
+    }
+
+    /**
+     * Returns the enemies data through a callback.
+     * @param {*} playerId Player which enemies you want to get.
+     * @param {(enemiesData: *[]) => void} callback Callback to pass the data.
+     */
+    getEnemiesData(playerId, callback) {
+        fetch(`${this.root}/mokepon/${playerId}/enemiesData`).then(res => {
+            if (res.ok) {
+                res.json().then( ({ enemiesData }) => callback(enemiesData) );
+            }
+        })
     }
 
     /**
@@ -483,7 +495,7 @@ let isTouchDevice = false;
 
 let language;
 function setLanguage() {
-    fetch("/languages/"+"en"+".json").then(res => {
+    fetch("/languages/"+getUserLanguage()+".json").then(res => {
         if (res.ok) {
             res.json().then(data => {
                 language = data;
@@ -791,17 +803,34 @@ function loadMap() {
 function updateMap() {
 
     PLAYER.updatePosition();
-    SERVER.updatePlayerPosition(PLAYER, updateEnemies);
+    SERVER.updatePlayerPosition(PLAYER, checkCollision);
+    SERVER.getEnemiesData(PLAYER.id, updateEnemies)
     
     MAP.clearContext();
     MAP.drawBackground();
 
     enemyPlayers.forEach(enemyPlayer => {
         enemyPlayer.drawPlayer();
-        checkCollisionWith(enemyPlayer);
     })
 
     PLAYER.drawPlayer();
+}
+
+function checkCollision(enemyData) {
+    if (enemyData === null || !PLAYER.canBattle()) {
+        return;
+    }
+
+    const enemy = enemyPlayers.find(player => player.id === enemyData.id);
+
+    stopMovement();
+    clearInterval(gameLoopInterval);
+    selectEnemy(enemy);
+    PLAYER.battleEnemy = enemy.id;
+    enemy.battleEnemy = PLAYER.id;
+
+    unloadMap();
+    loadBattle();
 }
 
 /**
@@ -964,11 +993,11 @@ function updateMoveInputWithKey() {
 
 /**
  * Updates the enemies data from the server.
- * @param {*[]} enemyPlayersData Enemies data.
+ * @param {*[]} enemiesData Enemies data.
  */
-function updateEnemies(enemyPlayersData) {
+function updateEnemies(enemiesData) {
     
-    enemyPlayers = enemyPlayersData.reduce((enemyPlayers, enemyData) => {
+    enemyPlayers = enemiesData.reduce((enemyPlayers, enemyData) => {
 
         const enemyPetName = enemyData.mokepon.name || '';
 
@@ -979,7 +1008,7 @@ function updateEnemies(enemyPlayersData) {
         let enemyPlayer = new Player();
         enemyPlayer.id = enemyData.id;
         enemyPlayer.pet = mokepons.find(mokepon => mokepon.name === enemyPetName);
-        enemyPlayer.position = { x: enemyData.x, y: enemyData.y };
+        enemyPlayer.position = enemyData.position;
         enemyPlayer.battleEnemy = enemyData.battleEnemy;
         enemyPlayer.isActive = enemyData.isActive;
         enemyPlayer.battleVictories = enemyData.battleVictories;
@@ -987,48 +1016,6 @@ function updateEnemies(enemyPlayersData) {
         
         return enemyPlayers;
     }, []);
-}
-
-/**
- * Checks for a collision with an enemy player.
- * @param {Player} enemy Enemy player to check collision with.
- */
-function checkCollisionWith(enemy) {
-
-    if (
-        !PLAYER.canBattle() ||
-        !enemy.canBattle() && enemy.battleEnemy != PLAYER.id
-    ) {
-        return;
-    }
-
-    const playerUp = PLAYER.position.y;
-    const playerDown = PLAYER.position.y + PLAYER.size.height;
-    const playerLeft = PLAYER.position.x;
-    const playerRight = PLAYER.position.x + PLAYER.size.width;
-
-    const enemyUp = enemy.position.y;
-    const enemyDown = enemy.position.y + enemy.size.height;
-    const enemyLeft = enemy.position.x;
-    const enemyRight = enemy.position.x + enemy.size.width;
-
-    if (
-        playerUp > enemyDown ||
-        playerDown < enemyUp ||
-        playerLeft > enemyRight ||
-        playerRight < enemyLeft
-    ) {
-        return;
-    }
-    
-    stopMovement();
-    clearInterval(gameLoopInterval);
-    selectEnemy(enemy);
-    setBattleEnemy(PLAYER, enemy.id);
-    enemy.battleEnemy = PLAYER.id;
-
-    unloadMap();
-    loadBattle();
 }
 
 /** Stops the movement of the player. */

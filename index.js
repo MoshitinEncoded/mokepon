@@ -19,9 +19,12 @@ class Player {
         this.mokepon = mokepon;
     }
 
-    updatePosition(x, y) {
-        this.x = x;
-        this.y = y;
+    updatePosition(position) {
+        this.position = position;
+    }
+
+    updateSize(size) {
+        this.size = size;
     }
 
     setAttackSequence(attackSequence) {
@@ -66,7 +69,7 @@ function playerExist(playerId) {
 
 /**
  * @param {String} playerId 
- * @returns The player if found and undefined otherwise.
+ * @returns {Player} The player if found and undefined otherwise.
  */
 function getPlayer(playerId) {
     return players.find(player => player.id === playerId);
@@ -83,8 +86,7 @@ function getPlayerIndex(playerId) {
 app.post('/mokepon/join', (req, res) => {
 
     const mokeponName = req.body.mokepon || '';
-    const x = req.body.x || 0;
-    const y = req.body.y || 0;
+    const position = req.body.position || { x: 0, y: 0 };
 
     if (mokeponName === '') {
         res.end();
@@ -92,28 +94,112 @@ app.post('/mokepon/join', (req, res) => {
 
     const player = createPlayer();
     player.setMokepon(new Mokepon(mokeponName));
-    player.updatePosition(x, y);
+    player.updatePosition(position);
     
     res.send(player.id);
 })
 
-
-
 app.post('/mokepon/:playerId/position', (req, res) => {
 
     const playerId = req.params.playerId || '';
-    const x = req.body.x || 0;
-    const y = req.body.y || 0;
+    const position = req.body.position || { x: 0, y: 0 };
+    const size = req.body.size;
+    let collidedEnemy;
 
-    const playerIndex = getPlayerIndex(playerId);
+    const player = getPlayer(playerId);
 
-    if (playerIndex >= 0) {
-        players[playerIndex].updatePosition(x, y);
+    console.log('se postea');
+    console.log('size', size);
+
+    if (player !== undefined) {
+        player.updatePosition(position);
+        player.updateSize(size);
+
+        if (!player.isActive || player.battleEnemy === '-1') {
+            collidedEnemy = null;
+        }
+        else if (player.battleEnemy === '') {
+            collidedEnemy = checkEnemyCollisions(player);
+
+            if (collidedEnemy !== null) {
+                setToBattle(player, collidedEnemy);
+            }
+        } else {
+            collidedEnemy = getPlayer(player.battleEnemy);
+        }
     }
 
-    const enemyPlayersData = players.filter(player => player.id !== playerId && player.mokepon !== undefined);
+    res.send({ collidedEnemy });
+})
 
-    res.send({ enemyPlayersData });
+/**
+ * Checks if the player can start a battle.
+ * @param {Player} player 
+ */
+function canBattle(player) {
+    return player.isActive && player.battleEnemy === '';
+}
+
+/**
+ * Sets 2 players to battle between them.
+ * @param {Player} player1 
+ * @param {Player} player2 
+ */
+function setToBattle(player1, player2) {
+    player1.battleEnemy = player2.id;
+    player2.battleEnemy = player1.id;
+}
+
+/**
+ * 
+ * @param {Player} player 
+ */
+function checkEnemyCollisions(player) {
+
+    const enemies = getEnemies(player.id);
+
+    for (var i = 0; i < enemies.length; i++) {
+
+        const enemy = enemies[i];
+
+        if (!canBattle(enemy)) {
+            continue;
+        }
+
+        const playerUp = player.position.y;
+        const playerDown = player.position.y + player.size.height;
+        const playerLeft = player.position.x;
+        const playerRight = player.position.x + player.size.width;
+
+        const enemyUp = enemy.position.y;
+        const enemyDown = enemy.position.y + enemy.size.height;
+        const enemyLeft = enemy.position.x;
+        const enemyRight = enemy.position.x + enemy.size.width;
+
+        if (
+            playerUp > enemyDown ||
+            playerDown < enemyUp ||
+            playerLeft > enemyRight ||
+            playerRight < enemyLeft
+        ) {
+            continue;
+        }
+
+        return enemy;
+    }
+
+    return null;
+}
+
+app.get('/mokepon/:playerId/enemiesData', (req, res) => {
+    const playerId = req.params.playerId || '';
+    let enemiesData = [];
+
+    if (playerExist(playerId)) {
+        enemiesData = getEnemies(playerId);
+    }
+
+    res.send({ enemiesData });
 })
 
 app.post('/mokepon/:playerId/battleEnemy', (req, res) => {
@@ -185,6 +271,15 @@ app.delete('/mokepon/:playerId', (req, res) => {
     deletePlayer(playerIndex);
     res.end();
 });
+
+/**
+ * 
+ * @param {String} playerId Player which enemies you want to get.
+ * @returns {Player[]} Enemy players.
+ */
+function getEnemies(playerId) {
+    return players.filter(player => player.id !== playerId && player.mokepon !== undefined);
+}
 
 function deletePlayer(playerIndex) {
 
