@@ -33,8 +33,7 @@
 
     "battleShout" : "BATTLE!",
 
-    "player" : "Player",
-    "enemy" : "Enemy",
+    "playerName" : "Player name:",
     "victories" : "Victories",
 
     "attacksSelect" : "Choose your attacks",

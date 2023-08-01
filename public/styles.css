@@ -190,6 +190,15 @@ button:active {
 .pet-cards {
     display: grid;
     grid-template-columns: auto auto auto;
+    margin-bottom: 15px;
+}
+
+#player-name-div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 90%;
+    gap: 6px;
 }
 
 #loading-transition, #battle-transition {
@@ -294,7 +303,7 @@ input:checked + .pet-card {
     font-size: 20px;
 }
 
-.attack-button:disabled {
+.attack-button:disabled, #pet-select-button:disabled {
     background-color: #0a39406e;
     border-color: #959ea7;
     color: #959ea7;

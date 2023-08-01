@@ -33,8 +33,7 @@
 
     "battleShout" : "PELEEN!",
 
-    "player" : "Jugador",
-    "enemy" : "Enemigo",
+    "playerName" : "Nombre del jugador:",
     "victories" : "Victorias",
 
     "attacksSelect" : "Elige tus ataques",

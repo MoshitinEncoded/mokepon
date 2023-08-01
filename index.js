@@ -8,8 +8,14 @@ app.use(cors());
 app.use(express.json());
 
 class Player {
-    constructor(id) {
+    /**
+     * 
+     * @param {String} id 
+     * @param {String} name 
+     */
+    constructor(id, name) {
         this.id = id;
+        this.name = name;
         this.battleEnemy = '-1';
         this.isActive = true;
         this.battleVictories = 0;
@@ -43,9 +49,10 @@ let playerTimeouts = {};
 
 /**
  * Creates a new player and joins him to the party.
+ * @param {String} name 
  * @returns The new player.
  */
-function createPlayer() {
+function createPlayer(name) {
     
     let id = `${Math.random()}`;
 
@@ -53,7 +60,7 @@ function createPlayer() {
         id = `${Math.random()}`;
     }
 
-    const newPlayer = new Player(id);
+    const newPlayer = new Player(id, name);
     players.push(newPlayer);
     return newPlayer;
 }
@@ -85,14 +92,16 @@ function getPlayerIndex(playerId) {
 
 app.post('/mokepon/join', (req, res) => {
 
+    const playerName = req.body.name || '';
     const mokeponName = req.body.mokepon || '';
     const position = req.body.position || { x: 0, y: 0 };
 
-    if (mokeponName === '') {
+    if (mokeponName === '' || playerName === '') {
         res.end();
+        return;
     }
 
-    const player = createPlayer();
+    const player = createPlayer(playerName);
     player.setMokepon(new Mokepon(mokeponName));
     player.updatePosition(position);
     
@@ -107,9 +116,6 @@ app.post('/mokepon/:playerId/position', (req, res) => {
     let collidedEnemy;
 
     const player = getPlayer(playerId);
-
-    console.log('se postea');
-    console.log('size', size);
 
     if (player !== undefined) {
         player.updatePosition(position);

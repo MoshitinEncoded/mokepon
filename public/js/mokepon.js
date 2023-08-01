@@ -15,6 +15,7 @@ class Server {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+                name: player.name,
                 mokepon: player.pet.name,
                 position: player.position
             })
@@ -323,6 +324,7 @@ class Player {
     constructor() {
         this.id = '';
         this.pet = null;
+        this.name = '';
         this.attackSequence = [];
         this.battleWins = 0;
         this.battleVictories = 0;
@@ -357,11 +359,32 @@ class Player {
 
     /** Draws the player pet on the canvas. */
     drawPlayer() {
+        // Draws the mokepon
         this.pet.drawMokepon(this.position, this.size, this.canBattle());
-        MAP.context.font = MAP.convertUnitsToPixels(MAP.widthUnits*0.04)+'px sans-serif';
+
+        // Defines text styles
         MAP.context.textAlign = 'center';
         MAP.context.textBaseline = 'top';
-        MAP.context.fillText(this.battleVictories+'🏆', MAP.convertUnitsToPixels(this.position.x + this.size.width*0.5), 10);
+        MAP.context.fillStyle = 'white';
+        MAP.context.strokeStyle = 'black';
+        MAP.context.globalAlpha = this.canBattle() ? 1 : 0.5;
+
+        const xCenterPosition = MAP.convertUnitsToPixels(this.position.x + this.size.width*0.5);
+        const yBottonPosition = MAP.convertUnitsToPixels(this.position.y + this.size.height*1.05);
+
+        // Draws the battle victories at the top
+        MAP.context.font = MAP.convertUnitsToPixels(MAP.widthUnits*0.04)+'px sans-serif';
+        MAP.context.lineWidth = MAP.convertUnitsToPixels(MAP.widthUnits*0.006);
+        MAP.context.strokeText(this.battleVictories+'🏆', xCenterPosition, 10);
+        MAP.context.fillText(this.battleVictories+'🏆', xCenterPosition, 10);
+
+        // Draws the player name below the mokepon
+        MAP.context.font = MAP.convertUnitsToPixels(MAP.widthUnits*0.03)+'px sans-serif';
+        MAP.context.lineWidth = MAP.convertUnitsToPixels(MAP.widthUnits*0.006);
+        MAP.context.strokeText(this.name, xCenterPosition, yBottonPosition);
+        MAP.context.fillText(this.name, xCenterPosition, yBottonPosition);
+        
+        MAP.context.globalAlpha = 1;
     }
 
     /** @returns Whether the player can initiate a battle or not. */
@@ -393,6 +416,10 @@ const TITLE_SECTION = document.getElementById('title-section');
 const PET_SELECTION = document.getElementById('pet-selection');
 const PET_SELECT_BUTTON = document.getElementById('pet-select-button');
 const PET_CARDS = document.getElementById('pet-cards');
+const PLAYER_NAME = document.getElementById('player-name');
+PLAYER_NAME.addEventListener('input', () => {
+    PET_SELECT_BUTTON.disabled = PLAYER_NAME.value === '';
+})
 
 const LOADING_TRANSITION = document.getElementById('loading-transition');
 const LOADING_TITLE = document.getElementById('loading-title');
@@ -414,9 +441,11 @@ const BATTLE_SECTION = document.getElementById('battle-section');
 const PLAYER_PET_NAME = document.getElementById('player-pet-name');
 const PLAYER_PET_IMAGE = document.getElementById('player-pet-image');
 const PLAYER_BATTLE_WINS = document.getElementById('player-victories');
+const PLAYER_TITLE = document.getElementById('player-title');
 const ENEMY_PET_NAME = document.getElementById('enemy-pet-name');
 const ENEMY_PET_IMAGE = document.getElementById('enemy-pet-image');
 const ENEMY_BATTLE_WINS = document.getElementById('enemy-victories');
+const ENEMY_TITLE = document.getElementById('enemy-title');
 const BATTLE_RESULT = document.getElementById('battle-result');
 
 // Battle history
@@ -583,13 +612,12 @@ function initializeGame() {
     HELP_CLOSE_BUTTON.innerHTML = language.close;
 
     document.getElementById('pet-select-title').innerHTML = language.petSelect;
+    document.getElementById('enter-your-name').innerHTML = language.playerName;
     PET_SELECT_BUTTON.innerHTML = language.continue;
     LOADING_TITLE.innerHTML = language.loading;
     BATTLE_TITLE.innerHTML = language.battleShout;
     CONTINUE_BUTTON.innerHTML = language.continue;
     RESTART_BUTTON.innerHTML = language.restart;
-    document.getElementById('player-title').innerHTML = language.player;
-    document.getElementById('enemy-title').innerHTML = language.enemy;
     document.getElementById('attacks-select-title').innerHTML = language.attacksSelect;
     PLAYER_BATTLE_WINS.innerHTML = language.victories + ": 0";
     ENEMY_BATTLE_WINS.innerHTML = language.victories + ": 0";
@@ -617,6 +645,8 @@ function initializeGame() {
     document.addEventListener('touchstart', () => isTouchDevice = true );
 
     HELP_CLOSE_BUTTON.addEventListener('click', closeHelpPanel);
+
+    PET_SELECT_BUTTON.disabled = true;
 
     startGame();
 }
@@ -675,6 +705,8 @@ function confirmPlayerPet() {
 
     PLAYER_PET_NAME.innerHTML = PLAYER.pet.name;
     PLAYER_PET_IMAGE.src = PLAYER.pet.imageURL;
+
+    PLAYER.name = PLAYER_NAME.value;
 
     GAME_START_SOUND.play();
 
@@ -1007,6 +1039,7 @@ function updateEnemies(enemiesData) {
 
         let enemyPlayer = new Player();
         enemyPlayer.id = enemyData.id;
+        enemyPlayer.name = enemyData.name;
         enemyPlayer.pet = mokepons.find(mokepon => mokepon.name === enemyPetName);
         enemyPlayer.position = enemyData.position;
         enemyPlayer.battleEnemy = enemyData.battleEnemy;
@@ -1071,8 +1104,10 @@ function loadBattle() {
         END_BATTLE_BUTTONS.style.display = 'none';
         PLAYER_BATTLE_WINS.innerHTML = language.victories+": 0";
         PLAYER_BATTLE_HISTORY.innerHTML = '';
+        PLAYER_TITLE.innerHTML = PLAYER.name;
         ENEMY_BATTLE_WINS.innerHTML = language.victories+": 0";
         ENEMY_BATTLE_HISTORY.innerHTML = '';
+        ENEMY_TITLE.innerHTML = enemyPlayer.name;
     
         MAP_SECTION.style.display = 'none';
         BATTLE_SECTION.style.display = 'flex';
