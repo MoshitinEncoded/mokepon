@@ -1,53 +1,55 @@
 ![Mokepon!](public/assets/readme-title.PNG)
 
-Una página web en la que juegas a un videojuego multijugador local similar al piedra, papel o tijeras, pero con mascotas elementales.
+A web page where you play a local multiplayer video game similar to rock-paper-scissors but with elemental pets.
 
-Para poder jugar, necesitas una computadora que actúe como servidor local al cual los jugadores se puedan conectar desde el navegador de sus dispositivos (chrome, firefox, edge, etc).
+In order to play, you need a computer that acts as a local server to which players can connect from their device's browser (chrome, firefox, edge, etc).
 
-Para esto usaremos una herramienta llamada **Node.js**. Si nunca la instalaste, a continuación te muestro cómo hacerlo.
+For this we will use a tool called **Node.js**. If you've never installed it, here's how to do it.
 
 ## How to install Node.js
 
-Primero que nada descargaremos la herramienta desde su [página web oficial](https://nodejs.org/en) haciendo clic en la versión **LTS**, ya que es la versión más estable. Esto descargará un instalador a su computadora.
+First of all we will download the tool from its [official website](https://nodejs.org/en) by clicking on the **LTS** version, since it is the most stable version. This will download an installer to your computer.
 
-Una vez descargado ejecutamos el instalador, le damos a siguiente varias veces y luego a instalar. Las opciones de instalación que vienen por defecto están bien, aunque siempre puedes cambiar la que te parezca oportuna. La única que **NO** debes cambiar es una opción de instalación llamada **Add to PATH**, ya que nos facilitará iniciar el servidor.
+Once downloaded, we run the installer, click on **next** several times and then **install**. Although the default installation options are fine, you can always change anything except an option called **Add to PATH**, as it will make it easier for us to run the server.
 
-Una vez instalado, descarga el repositorio haciendo click en **Code > Download ZIP**. Extrae la carpeta donde quieras.
+Once installed, download the repository by clicking **Code > Download ZIP**. Extract the folder wherever you want.
 
-## Launch the server
+## Run the server
 
-Para iniciar el servidor deberemos abrir la consola de comandos escribiendo en la barra de búsqueda "Simbolo del sistema" (**Windows**), "Terminal" (**Mac**) o desde el menú de aplicaciones (**Mac**/**Linux**).
+To run the server we must open the command console by typing in the search bar "Command Prompt" (**Windows**), "Terminal" (**Mac**) or from the applications menu (**Mac**/**Linux**).
 
-Una vez abierta, realizamos lo siguiente:
+Once open, we'll enter the following commands:
 
 ### Windows
 
--  Si guardaste la carpeta en otra unidad diferente a C: (reemplaza **D:** por tu unidad)
+-  If you saved the folder to a drive other than C: (replace **D:** with your drive)
     - D:
-- Nos movemos al directorio de la carpeta que extragimos
-    - cd "D:\path\to\dir"
-- Iniciamos el servidor
+- We move to the directory of the extracted folder
+    - cd "D:\path\to\mokepon"
+- We run the server
     - node index.js
 
 ### Mac/Linux
 
-- Nos movemos al directorio raíz
+- We move to the root directory
     - cd~
-- Nos movemos al directorio de la carpeta que extragimos
-    - cd /path/to/dir
-- Iniciamos el servidor
+- We move to the directory of the extracted folder
+    - cd /path/to/mokepon
+- We run the server
     - node index.js
 
-Espera un momento a que se inicie el servidor. Cuando ya esté funcionando, te aparecerá el mensaje **Server working!** en la consola.
+Wait a moment for the server to start. When it is working, the message **Server working!** will appear on the console.
 
-LISTO! Ahora puedes jugar al juego escribiendo la dirección IP del servidor en la barra de búsqueda de cualquier navegador + el puerto 8080. Ejemplo: **192.168.1.3:8080**
+ALL READY! Now you can play the game by typing the server IP address in the search bar of any browser + port 8080. Example: **192.168.1.3:8080**
 
-Para saber la dirección IP, escribe y ejecuta la siguiente línea en tu terminal o consola de comandos:
+Remember that **this only works with devices that are in the same local network**.
+
+To find out the IP address, type and execute the following line in your terminal or command console:
 - ipconfig (**Win**)
-    - Busca la que dice "Dirección IPv4..."
+    - Look for the one that says "IPv4 Address..."
 - ifconfig (**Linux**)
-    - La dirección está luego de "inet"
-- Si estás en **Mac**
+    - The address is after "inet"
+- If you're in **Mac**
     - ipconfig getifaddr en0 (**WiFi**)
     - ipconfig getifaddr en1 (**Ethernet**)
 
