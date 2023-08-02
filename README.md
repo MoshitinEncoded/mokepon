@@ -2,6 +2,7 @@
     <img src="./public/assets/readme-title.PNG" alt="Mokepon!" />
 </div>
 
+<br>
 A web page where you play a local multiplayer video game similar to rock-paper-scissors but with elemental pets.
 
 In order to play, you need a computer that acts as a local server to which players can connect from their device's browser (chrome, firefox, edge, etc).
