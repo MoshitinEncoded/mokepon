@@ -1,4 +1,6 @@
-![Mokepon!](public/assets/readme-title.PNG)
+<div align="center">
+    <img src="./public/assets/readme-title.PNG" alt="Mokepon!" />
+</div>
 
 A web page where you play a local multiplayer video game similar to rock-paper-scissors but with elemental pets.
 
