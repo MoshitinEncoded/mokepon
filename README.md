@@ -14,6 +14,7 @@ Once downloaded, we run the installer, click on **next** several times and then 
 
 Once installed, download the repository by clicking **Code > Download ZIP**. Extract the folder wherever you want.
 
+
 ## Run the server
 
 To run the server we must open the command console by typing in the search bar "Command Prompt" (**Windows**), "Terminal" (**Mac**) or from the applications menu (**Mac**/**Linux**).
@@ -40,7 +41,10 @@ Once open, we'll enter the following commands:
 
 Wait a moment for the server to start. When it is working, the message **Server working!** will appear on the console.
 
-ALL READY! Now you can play the game by typing the server IP address in the search bar of any browser + port 8080. Example: **192.168.1.3:8080**
+
+## ALMOST THERE!
+
+Now you can play the game by typing the server IP address in the search bar of any browser + port 8080. Example: **192.168.1.3:8080**
 
 Remember that **this only works with devices that are in the same local network**.
 
@@ -53,7 +57,9 @@ To find out the IP address, type and execute the following line in your terminal
     - ipconfig getifaddr en0 (**WiFi**)
     - ipconfig getifaddr en1 (**Ethernet**)
 
-*This project is an extended version that came from a web course. The same can be found [here](https://platzi.com/cursos/programacion-basica/).*
+That's all, have fun!
+
+*This project is an extended version made by me, from a free online course which you can find [here](https://platzi.com/cursos/programacion-basica/) (it's in spanish).*
 
 ## Sounds used
 
